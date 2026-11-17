@@ -4,14 +4,24 @@
   "private": true,
   "scripts": {
     "build": "gulp bundle --ship && gulp package-solution --ship",
+    "build:dev": "gulp bundle",
+    "lint": "eslint src --ext .ts,.tsx --max-warnings 0",
+    "styles": "gulp sass",
+    "trust-dev-cert": "gulp trust-dev-cert",
     "clean": "gulp clean",
-    "serve": "gulp serve"
+    "serve": "gulp serve",
+    "test": "node src/tests/mock-lists.test.cjs && node src/tests/portability.test.cjs",
+    "project:check": "node src/tooling/project.cjs check",
+    "project:restore": "node src/tooling/project.cjs restore",
+    "prebuild": "npm run project:check",
+    "prebuild:dev": "npm run project:check"
   },
   "dependencies": {
     "@microsoft/sp-core-library": "1.21.1",
     "@microsoft/sp-http": "1.21.1",
     "@microsoft/sp-property-pane": "1.21.1",
     "@microsoft/sp-webpart-base": "1.21.1",
+    "@fluentui/react-components": "9.56.8",
     "@radix-ui/react-dialog": "1.1.6",
     "@radix-ui/react-dropdown-menu": "2.1.6",
     "@radix-ui/react-slot": "1.1.2",
@@ -27,6 +37,13 @@
     "tailwind-merge": "2.6.0"
   },
   "devDependencies": {
+    "@microsoft/eslint-config-spfx": "1.21.1",
+    "@microsoft/eslint-plugin-spfx": "1.21.1",
+    "@rushstack/eslint-config": "4.0.1",
+    "@types/webpack-env": "1.15.3",
+    "eslint": "8.57.1",
+    "eslint-plugin-react-hooks": "4.3.0",
+    "postcss": "8.4.49",
     "@microsoft/sp-build-web": "1.21.1",
     "@microsoft/sp-module-interfaces": "1.21.1",
     "@types/node": "22.14.0",
@@ -39,11 +56,13 @@
     "@microsoft/rush-stack-compiler-5.3": "0.1.0"
   },
   "overrides": {
+    "@fluentui/react-components": "$@fluentui/react-components",
     "browserslist": {
       ".": "4.29.3",
       "electron-to-chromium": "1.5.459"
     },
-    "@fluentui/react-components": "9.58.3"
+    "@fluentui/react-input": "9.8.2",
+    "@fluentui/react-virtualizer": "9.0.0-alpha.89"
   },
   "engines": {
     "node": ">=22.14.0 <23.0.0"

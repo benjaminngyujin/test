@@ -1,6 +1,64 @@
+# Installed dependencies and package-manager caches
 node_modules/
-lib/
-lib-esm/
-dist/
-temp/
+/.npm/
+/.pnpm-store/
+/.yarn/cache/
+
+# SPFx / TypeScript generated output
+/lib/
+/lib-esm/
+/dist/
+/temp/
+/release/
+/.heft/
+/sharepoint/solution/
+*.sppkg
+*.scss.ts
+*.tsbuildinfo
+
+# Test, coverage, and tooling output
+/coverage/
+/.nyc_output/
+/playwright-report/
+/test-results/
+/.cache/
+/.eslintcache
+/.sass-cache/
 *.log
+
+# Local environment settings and certificates (keep safe examples)
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+*.local
+/.certs/
+*.pfx
+*.p12
+
+# OS and editor clutter; retain shared VS Code project settings/tasks
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+/.idea/
+/.vscode/*
+!/.vscode/settings.json
+!/.vscode/tasks.json
+!/.vscode/extensions.json
+
+# Legacy scaffolding/reference files: not used by the current SPFx build
+/.yo-rc.json
+/unzip/
+/InnovationPulse.module - Copy.scss.zip
+/components.json
+/tailwind.config.js
+/scripts/build-styles.js
+/src/styles/tailwind.generated.css
+
+# Keep src/, assets, docs, tests, notices, package-lock.json, and build config.
+# src/project/.gitignore is the master copy; apply changes via project.cjs.
