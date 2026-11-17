@@ -1,0 +1,69 @@
+/* Hover and press feedback for interactive Innovation Pulse controls. */
+.page_06bf4d8d button:not(:disabled),
+.page_06bf4d8d a,
+.page_06bf4d8d select:not(:disabled),
+.page_06bf4d8d input:not(:disabled) {
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+}
+
+.page_06bf4d8d button:not(:disabled):hover,
+.page_06bf4d8d a:hover,
+.page_06bf4d8d select:not(:disabled):hover,
+.page_06bf4d8d input:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(24, 44, 72, .12);
+}
+
+.page_06bf4d8d .card_06bf4d8d:hover {
+  transform: translateY(-4px);
+  border-color: #8ca8d4;
+  box-shadow: 0 12px 26px rgba(24, 44, 72, .14);
+}
+
+.page_06bf4d8d .tab_06bf4d8d:hover,
+.page_06bf4d8d .activeTab_06bf4d8d:hover {
+  transform: none;
+  background-color: #f5f8fc;
+  box-shadow: none;
+}
+
+.page_06bf4d8d select:not(:disabled):hover,
+.page_06bf4d8d input:not(:disabled):hover {
+  border-color: #8ca8d4;
+}
+
+.page_06bf4d8d a:hover {
+  color: #173b75;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.page_06bf4d8d button:not(:disabled):active,
+.page_06bf4d8d a:active {
+  transform: translateY(0) scale(.98);
+}
+
+.page_06bf4d8d button:focus-visible,
+.page_06bf4d8d a:focus-visible,
+.page_06bf4d8d select:focus-visible,
+.page_06bf4d8d input:focus-visible {
+  outline: 3px solid #87b7f3;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page_06bf4d8d button,
+  .page_06bf4d8d a,
+  .page_06bf4d8d select,
+  .page_06bf4d8d input {
+    transition: none !important;
+  }
+
+  .page_06bf4d8d button:hover,
+  .page_06bf4d8d a:hover,
+  .page_06bf4d8d .card_06bf4d8d:hover,
+  .page_06bf4d8d button:active,
+  .page_06bf4d8d a:active {
+    transform: none !important;
+  }
+}

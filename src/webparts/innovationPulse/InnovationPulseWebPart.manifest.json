@@ -1,0 +1,29 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
+  "id": "d9043009-e2ae-48ef-87cf-537f9e3a099e",
+  "alias": "InnovationPulseWebPart",
+  "componentType": "WebPart",
+  "version": "*",
+  "manifestVersion": 2,
+  "requiresCustomScript": false,
+  "supportedHosts": [
+    "SharePointWebPart"
+  ],
+  "supportsThemeVariants": false,
+  "preconfiguredEntries": [
+    {
+      "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+      "group": {
+        "default": "Advanced"
+      },
+      "title": {
+        "default": "Innovation Pulse"
+      },
+      "description": {
+        "default": "Mock news and readership insights using fictional local data."
+      },
+      "officeFabricIconFontName": "Page",
+      "properties": {}
+    }
+  ]
+}

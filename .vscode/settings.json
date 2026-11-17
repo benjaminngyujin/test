@@ -1,0 +1,7 @@
+{
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "src/**/*.scss.ts": true
+  }
+}
