@@ -1,6 +1,6 @@
 # Innovation Pulse SPFx
 
-The portable handoff is **`src/`**: web-part code, images, styles, mock data,
+The portable handoff is **`src/`**: web-part code, images, styles, SharePoint services,
 tests, documentation, build logic, and templates for the SPFx project files.
 
 See [source documentation](src/README.md), [porting instructions](src/docs/portability.md),

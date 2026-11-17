@@ -3,7 +3,7 @@
 ## What to copy
 
 Copy the entire **`src` folder** into an empty project folder. It contains the
-web part, images, styles, mock data, documentation, tests, and templates for the
+web part, images, styles, SharePoint services, documentation, tests, and templates for the
 build configuration. You do not need to copy `node_modules` or previous build output.
 
 SPFx needs some configuration files outside `src` when building. The restore
@@ -34,7 +34,11 @@ sharepoint/solution/innovation-pulse-spfx.sppkg
 
 Use your team's normal SharePoint app-catalog deployment process to install this
 package, then add the web part to a SharePoint page. Building does not deploy it.
-The web part currently uses fictional mock data; it is not connected to live lists.
+After deployment, edit the web part and set **News list name or GUID**.
+The list must be on the current SharePoint site. No mock articles are included.
+Optionally set an interactions list for insights; turn on readership recording
+only if you want to save interaction records. See [list setup](docs/live-lists.md)
+for the expected columns and how to map your list.
 
 ## Where to make changes
 
@@ -43,8 +47,8 @@ The web part currently uses fictional mock data; it is not connected to live lis
 | Page layout and filtering | `src/webparts/innovationPulse/components/InnovationPulse.tsx` |
 | Colours, spacing, and styling | `src/webparts/innovationPulse/components/InnovationPulse.module.scss` |
 | Card-to-popup animation | `src/webparts/innovationPulse/components/ArticleDialog.tsx` |
-| Mock news and interactions | `src/webparts/innovationPulse/data/mockLists.ts` |
-| Category names and banner mapping | `src/webparts/innovationPulse/data/categories.ts` |
+| List columns and real list access | `src/webparts/innovationPulse/services/listSchema.ts` and `SharePointListsService.ts` |
+| Category names and banner mapping | `src/webparts/innovationPulse/presentation/categoryBanners.ts` |
 | Banner images | `src/webparts/innovationPulse/assets/banners/` |
 | Build settings and dependency versions | `src/project/` |
 | Custom build logic | `src/tooling/gulp.cjs` |

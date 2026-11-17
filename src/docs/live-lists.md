@@ -1,81 +1,117 @@
-# Internal LLM edit map: mock data → SharePoint lists
+# Connecting the real SharePoint lists
 
-All paths below are relative to the restored project root. See [portability.md](portability.md) for source-only handoff and build configuration edit points. Modify active code under `src/`;
-`unzip/` is a reference snapshot. Do not edit `lib/`, `dist/`, `temp/`, generated
-`*.scss.ts`, or the packaged `.sppkg` as source.
+There is no mock data provider or `data` folder. `InnovationPulse.tsx` receives an
+`IInnovationPulseService` through props. The web part creates a
+`SharePointListsService` using its authenticated SPFx context. List contents are
+read at runtime and are not included in the source handoff or deployment package.
 
-## Current edit points
+## Set up after porting
 
-| Change | Source / symbol |
+1. Build and deploy the web part to your SharePoint site.
+2. Edit the page and open the web part's properties.
+3. Enter **News list name or GUID**. This is a list on the current SharePoint web.
+4. Optionally enter **Interactions list name or GUID** to enable readership
+   insights for users who can read that list.
+5. Enable **Record readership interactions** only if you want page visits, tile
+   clicks, and source-link clicks written to the interactions list. It is off by
+   default. Reads and writes use the signed-in user's SharePoint permissions.
+6. Apply/save the page. Verify articles, filtering, images, and permissions using
+   accounts with the intended access. The source does not contain a real list ID.
+
+An unset news list produces a setup message. An empty list produces an empty
+state. Failed requests produce an error; no sample articles are substituted.
+Blank interactions configuration disables both insights and tracking.
+
+## Match your columns
+
+Edit `src/webparts/innovationPulse/services/listSchema.ts` if your column names
+differ. Each mapping value may be a **display name or internal name**. The service
+queries the list's field definitions to find the real internal name, preferring
+an exact internal-name match. Ambiguous display names cause an explicit error.
+Reload the web part after changing a list's column definitions.
+
+News mapping defaults:
+
+| Column | Type | Required to load news? |
+| --- | --- | --- |
+| article title | Text | Yes |
+| upload date | Date and Time | Yes |
+| article body | Multiple lines of text | Yes |
+| category | Text or single Choice | Yes |
+| source url | Text or Hyperlink | No |
+| sub category | Text or single Choice | No |
+| region | Text or single Choice | No |
+| source publish date | Date and Time | No |
+| country | Text or single Choice | No |
+| DBS implication | Text or Multiple lines of text | No |
+| source publisher | Text | No |
+| article image url | Text or Hyperlink | No |
+| in_dib | Yes/No | No |
+
+Missing optional fields become empty strings (or false for `in_dib`). Existing
+fields with incompatible types produce an error rather than being silently
+misinterpreted. Rich-text bodies/implications are converted to plain text; the
+reader does not render arbitrary HTML. Only HTTP(S) source/image URLs are used.
+Both `in_dib` values appear in the feed. Upload date drives sorting.
+
+Interactions mapping defaults (all required when using the interactions list):
+
+| Column | Type |
 | --- | --- |
-| News fixtures and display-column mapping | `src/webparts/innovationPulse/data/mockLists.ts`: `examples`, `mockNewsRows`, `MockLists.getNews` |
-| Interaction fixtures and local writes | Same file: `mockViewRows`, `MockLists.getViews`, `MockLists.track` |
-| Canonical category labels and images | `src/webparts/innovationPulse/data/categories.ts`: `categoryBanners` |
-| General / unknown-category banner | Same file: `defaultBanner`, `bannerForCategory` |
-| Adapter creation and async UI calls | `src/webparts/innovationPulse/components/InnovationPulse.tsx`: `lists`, `loadNews`, `loadInsights`, `trackInteraction` |
-| Category filtering / grouping | Same component: `categoryFor`, `changeCategory`, `render` |
-| Banner rendering and heading | Same component: `<header className={styles.hero}>` |
-| Banner size, crop, contrast, mobile layout | `src/webparts/innovationPulse/components/InnovationPulse.module.scss`: `.hero` |
-| SharePoint context and list configuration | `src/webparts/innovationPulse/InnovationPulseWebPart.ts`, component `IInnovationPulseProps.ts`, manifest and `loc/` |
+| article | Text |
+| article ID | Number (not a Lookup) |
+| viewer name | Text |
+| viewer account | Text (not a Person field) |
+| original source URL | Text or Hyperlink; allow empty values |
+| viewed at | Date and Time |
+| interaction type | Text or Choice: `Page view`, `Tile click`, `Source article click` |
 
-The nine category names in `categoryBanners` must match the list's category values
-exactly (including punctuation). The UI derives its dropdown and sections from
-loaded articles, not the banner registry. Thus each category needs a news row to
-appear. Mock fixtures provide two per category. All categories shows up to four
-articles per section; selecting a category shows every matching article. Search
-still intersects with the category filter and can produce an empty result.
+Rename the built-in `Title` column to the mapped article/title display name, or
+map that property to `Title`. If using a different column, ensure the unused
+built-in Title and any extra columns do not block writes with unmet requirements.
+Page views use article ID `0` and an empty source URL. Reader name and account
+come from `pageContext.user`; the account is the SharePoint login name.
 
-Banner images are decorative AI-generated JPEGs bundled under
-`src/webparts/innovationPulse/assets/banners/`, without external image hosts.
-See [banner prompts](banner-prompts.md) for each image prompt and replacement steps.
-GenAI depicts detailed neural-network feature maps; Quantum Computing depicts a
-superconducting processor's dilution refrigerator. These are synthetic imagery,
-not documentary photos or exact scientific diagrams. To use approved photography,
-replace that entry's `imageUrl` with an accessible HTTPS SharePoint asset URL.
-Keep the dark overlay and check long headings and mobile cropping. Article images
-are independently mapped from `article image url`; changing a banner does not
-change those images. Unknown categories and “All categories” use `defaultBanner`.
+Lookup, Person, taxonomy, multi-choice, calculated, and modern Image fields need
+explicit service changes before use. Do not map them as plain strings. To use a
+list on another web, change service construction deliberately; the property pane
+currently targets the web hosting this web part.
 
-## Live-list migration checklist
+## Developer edit map
 
-1. Confirm the news and interactions list IDs, actual **internal** field names,
-   field types, access rules, and whether category is single-choice or multi-choice.
-   The quoted fields in `IMockNewsRow` / `IMockViewRow` are display names only.
-   Never infer REST internal names from them. Record the confirmed schema here.
-2. Implement a dedicated live adapter (for example `data/SharePointLists.ts`). Keep
-   `INewsItem`, `IViewEvent`, and `InteractionType` as the UI contract; optionally
-   move these types into `data/models.ts` and update imports. Map live records at
-   this boundary, not in JSX. Preserve IDs, date semantics, categories, and boolean
-   values. Normalize SharePoint hyperlink objects to URL strings, nulls to safe
-   defaults, and validate dates. Decide how rich text is converted; the current
-   reader renders text, not arbitrary HTML. Upload date drives sorting; source
-   publish date is a separate metadata field. Both `in_dib` values are displayed.
-3. Add context and list configuration in the web part and component props. Replace
-   `new MockLists()` at the marked adapter edit point. Prefer injecting a per-instance
-   adapter with `getNews`, `getViews`, and `track` methods. Do not instantiate it on
-   every render. Keep mock mode explicit for local demonstrations.
-4. Convert those adapter methods to promises. Update **all three** callers:
-   `loadNews` awaits news; `loadInsights` awaits events; `trackInteraction` awaits
-   a write and then an event refresh. Add `try/catch/finally` and disposed checks
-   after awaits. Set `error`, `insightsError`, or `trackingError` appropriately;
-   failed tracking must not prevent article reading. Handle paging so later pages
-   and categories are not silently omitted. Guard stale responses on refresh.
-5. Replace `checkInsightsAccess` (currently always true) with approved permissions.
-   Enforce access at the list/service too, including CSV data. Replace fictional
-   reader identity only under the agreed identity/privacy policy. Preserve the
-   three interaction types and the current article ID 0 convention for page views,
-   or explicitly map it to a nullable lookup if the live schema requires one.
-6. Update mock-only UI copy in `InnovationPulse.tsx` (hero, privacy notice),
-   localization, manifest, and README when live mode is actually enabled. Never
-   claim that real persisted events remain local or that real readers are fictional.
-7. Validate mappings, null fields, pagination, empty lists, request failures,
-   denied insights access, tracking failures, and refresh races. Verify every
-   category filter and banner, search + category, and “All categories” reset.
-   Build and test in a real SharePoint host before deployment.
+All paths below are under `src/webparts/innovationPulse/`.
 
-## Local verification
+| Change | File |
+| --- | --- |
+| List settings, service creation, SPFx context | `InnovationPulseWebPart.ts` |
+| Default settings (blank list names, tracking off) | `InnovationPulseWebPart.manifest.json` |
+| Column names | `services/listSchema.ts` |
+| REST requests, paging, field mapping, permissions, writes | `services/SharePointListsService.ts` |
+| Contract consumed by the UI | `services/IInnovationPulseService.ts` |
+| Article and interaction types | `models/NewsModels.ts` |
+| Loading/error states, filters, article display | `components/InnovationPulse.tsx` |
+| Category banner mapping | `presentation/categoryBanners.ts` |
+| Bundled decorative banner images | `assets/banners/` |
 
-Use Node 22.22.2, then `npm test`, `npm run lint`, and
-`npm run build`. The tests cover exact category coverage, unique banners, valid
-fixture dates, filtered rendering, search, fallback, mappings, and local events.
-They do not validate live SharePoint requests or browser layout.
+Keep list access out of `InnovationPulse.tsx`. It calls asynchronous service
+methods, handles failures, and discards late news/insight results. Changing web
+part settings creates a new service and remounts the component. Failed tracking
+does not prevent reading an article. SharePoint enforces list/item permissions;
+hiding an Insights tab is not an access-control boundary. CSV exports contain
+only interaction records returned for the current user.
+
+News and interactions follow REST pagination. Category sections come from actual
+news rows, so a category with no articles will not appear. The banner registry
+contains the nine established category labels and a general fallback image.
+Banner configuration is presentation, not a source of articles.
+
+## Validation
+
+Run `npm test`, `npm run lint`, and `npm run build`. Tests use isolated stub HTTP
+responses to exercise mappings, paging, permission denial, setup errors,
+tracking opt-in/failure, and stale response handling. Test records are not imported
+by the web part. There is no runtime sample-data mode.
+
+The implementation has passed local tests and production packaging. Actual
+SharePoint connectivity and your list schema remain to be verified after porting.
+No live list was accessed or changed during implementation.

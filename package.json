@@ -10,7 +10,7 @@
     "trust-dev-cert": "gulp trust-dev-cert",
     "clean": "gulp clean",
     "serve": "gulp serve",
-    "test": "node src/tests/mock-lists.test.cjs && node src/tests/portability.test.cjs",
+    "test": "node src/tests/live-lists.test.cjs && node src/tests/portability.test.cjs",
     "project:check": "node src/tooling/project.cjs check",
     "project:restore": "node src/tooling/project.cjs restore",
     "prebuild": "npm run project:check",

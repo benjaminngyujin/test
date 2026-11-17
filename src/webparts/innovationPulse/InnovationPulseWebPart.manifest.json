@@ -20,10 +20,14 @@
         "default": "Innovation Pulse"
       },
       "description": {
-        "default": "Mock news and readership insights using fictional local data."
+        "default": "News and readership insights from your SharePoint lists."
       },
       "officeFabricIconFontName": "Page",
-      "properties": {}
+      "properties": {
+        "newsList": "",
+        "viewsList": "",
+        "enableTracking": false
+      }
     }
   ]
 }

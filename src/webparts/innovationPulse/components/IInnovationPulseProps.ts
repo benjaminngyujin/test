@@ -1,2 +1,2 @@
-// The mock component needs no SharePoint context or list configuration.
-export interface IInnovationPulseProps {}
+import { IInnovationPulseService } from '../services/IInnovationPulseService';
+export interface IInnovationPulseProps { service: IInnovationPulseService; }

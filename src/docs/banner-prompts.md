@@ -4,7 +4,7 @@ Generated using the built-in image-generation tool. These are synthetic editoria
 images, not documentary photographs or scientifically exact diagrams. Runtime
 assets live in `src/webparts/innovationPulse/assets/banners/` as optimized JPEGs.
 Each image was generated individually; no external image host is required.
-To replace an image, update its JPEG or the static import in `data/categories.ts`.
+To replace an image, update its JPEG or the static import in `presentation/categoryBanners.ts`.
 Keep a wide 3:1 composition and dark space behind the left-aligned heading.
 
 ## Landing (`landing.jpg`)

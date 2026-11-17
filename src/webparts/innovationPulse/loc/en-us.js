@@ -1,1 +1,1 @@
-define([], function() { return { PropertyPaneDescription: "Mock preview: fictional local news and interaction records. No SharePoint list configuration is required." }; });
+define([], function() { return { PropertyPaneDescription: "Connect news and optional readership lists on this SharePoint site. Configure column names in services/listSchema.ts." }; });

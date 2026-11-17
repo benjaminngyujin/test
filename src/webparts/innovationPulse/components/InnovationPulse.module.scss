@@ -106,7 +106,7 @@
 @media(max-width:640px) { .articleOverlay { padding:12px; } .articlePanel { max-height:calc(100vh - 24px); max-height:calc(100dvh - 24px); } .articleHeader { padding:22px 20px 18px; gap:12px; } .articleContent { padding:18px 20px 24px; } .articleContent dl { grid-template-columns:1fr; gap:4px; } .articleContent dd { margin-bottom:10px; } .articleImage { height:170px; } }
 @media(prefers-reduced-motion:reduce) { .card { transition:none; } }
 
-/* Category banner: artwork is configured in data/categories.ts. */
+/* Category banner: artwork is configured in presentation/categoryBanners.ts. */
 .hero {
   box-sizing: border-box;
   min-height: 240px;

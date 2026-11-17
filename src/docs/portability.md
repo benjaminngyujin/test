@@ -2,7 +2,7 @@
 
 Copy the entire `src/` folder into a new, empty project directory. Everything
 specific to this web part is included: code, styles, banners, loading icon,
-localization, manifests, mock data, tests, documentation, dependency versions and
+localization, manifests, SharePoint services, tests, documentation, dependency versions and
 lockfile, and the SPFx build configuration. No runtime asset points outside `src`.
 
 From the **new project root** (the directory containing `src`):
@@ -31,9 +31,9 @@ This handoff is not a standalone HTML application or an offline npm installer.
 ## Edit map for internal LLMs
 
 - Application edits: `src/webparts/innovationPulse/`.
-- Images: `src/webparts/innovationPulse/assets/`; mapping in `data/categories.ts`.
-- News fixtures / live-list integration: [live-lists.md](live-lists.md).
-- Tests: `src/tests/` covers mock behavior and the portable restore workflow; run `npm test`.
+- Images: `src/webparts/innovationPulse/assets/`; mapping in `presentation/categoryBanners.ts`.
+- Live-list configuration and column mapping: [live-lists.md](live-lists.md).
+- Tests: `src/tests/` covers live-list service behavior and the portable restore workflow; run `npm test`.
 - Build behavior: `src/tooling/gulp.cjs`; root `gulpfile.js` delegates to it.
 - Root configuration: **edit `src/project/` first**, then run
   `node src/tooling/project.cjs apply` to update the root copies. `apply` overwrites
